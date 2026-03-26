@@ -32,10 +32,30 @@ def generate_keys() -> tuple[tuple[int,int],tuple[int,int]]:
     d = pow(e,-1,phi)
     return (e,n),(d,n)
 
-def encrypt_message(public_key: tuple[int,int], private_key: tuple[int,int], text: str):
+def encrypt_message(public_key: tuple[int,int], text: str):
+    encrypted_message = []
     for m in text:
-        print(m, end=" ")
+        c = pow(ord(m), public_key[0], public_key[1])
+        encrypted_message.append(c)
+    return encrypted_message
+
+def decrypt_message(private_key: tuple[int,int], text: list[int]):
+    decrypted_message = ""
+    for c in text:
+        m = pow(c, private_key[0], private_key[1])
+        decrypted_message += chr(m)
+    return decrypted_message
+
+def validate_rsa_process(original: str, decrypted: str) -> bool:
+    return original == decrypted
 
 if __name__ == "__main__":
     public_key, private_key = generate_keys()
-    encrypt_message(public_key, private_key, TEXT)
+    encrypted_message = encrypt_message(public_key, TEXT)
+    print(encrypted_message)
+    decrypted_message = decrypt_message(private_key, encrypted_message)
+    print(decrypted_message)
+    if (validate_rsa_process(TEXT, decrypted_message)):
+        print("Decrypted message matches original")
+    else:
+        print("Decrypted message is different than original!")
