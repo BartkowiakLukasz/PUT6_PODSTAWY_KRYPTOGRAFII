@@ -2,6 +2,7 @@ import secrets
 from sympy import isprime
 
 PRIME_LENGTH = 511
+NUM_USERS = 4
 
 def generate_large_prime(bit_length: int = 511) -> int:
     while True:
@@ -29,17 +30,35 @@ def generate_keypair(g: int, n: int) -> tuple[int,int]:
     return secret_x, public_x
 
 if __name__ == "__main__":
+    print("---------- Generating parameters -----------")
     q,n = generate_safe_prime(PRIME_LENGTH)
     g = generate_g(q,n)
     print("q = ", q)
     print("n = ", n)
-    print("g = ", g)    
-    x, X = generate_keypair(g, n)
-    y, Y = generate_keypair(g, n)
-    a_key = pow(Y, x, n)
-    b_key = pow(X, y, n)
-    print(f"Person A key: {a_key}")
-    print(f"Person B key: {b_key}")
+    print("g = ", g)
+    state: list[tuple[int,int]] = [generate_keypair(g,n) for _ in range(NUM_USERS)]
+    for _ in range(NUM_USERS-1):
+        new_state: list[tuple[int, int]] = []
+        for i in range(NUM_USERS):
+            # secret number of that person
+            secret_i = state[i][0]
+            # public number from previous person
+            received_package = state[i - 1][1]
+            # X = g^x mod n
+            new_package = pow(received_package, secret_i, n)
+            new_state.append((secret_i, new_package))
+        state = new_state
+    print("Generated exchange keys:")
+    for i in range(NUM_USERS):
+        print(f"User {i}: {state[i][1]}")
+    
+    first_key = state[0][1]
+    all_match = all(user_state[1] == first_key for user_state in state)
+
+    if all_match:
+        print("Success, whole group has the same key")
+    else:
+        print("Something gone wrong")
 
 
 
