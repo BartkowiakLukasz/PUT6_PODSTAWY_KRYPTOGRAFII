@@ -19,7 +19,7 @@ if __name__ == "__main__":
          print(f"Total time: {total_time} mu, len = {len(algorithm_hex)}")
          results.append((name, total_time, len(algorithm_hex))) 
       print("----------------------------------------------------------")
-      print(f"Diff in elapsed time and output lenght of {len(txt)} input lenght")
+      print(f"Diff in elapsed time and output length of {len(txt)} input length")
       fastest = min(results, key= lambda x: x[1])
       print(f"The fastest algorithm: {fastest[0]}, {fastest[1]} mu")
       slowest = max(results, key = lambda x : x[1])
