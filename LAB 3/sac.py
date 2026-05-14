@@ -13,7 +13,7 @@ if __name__ == "__main__":
         hash2 = hashlib.sha256(changed).digest()
         x = int.from_bytes(hash1, 'big')
         y = int.from_bytes(hash2, 'big')
-        bite_diff = (x ^ y).bit_count()
-        percentage = bite_diff / 256
+        bit_diff = (x ^ y).bit_count()
+        percentage = bit_diff / 256
         sum_percentage += percentage
     print(f"Average bite diff = {(sum_percentage / n * 100):.2f}% of {n} random strings")
