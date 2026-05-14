@@ -52,9 +52,12 @@ def validate_rsa_process(original: str, decrypted: str) -> bool:
 if __name__ == "__main__":
     public_key, private_key = generate_keys()
     encrypted_message = encrypt_message(public_key, TEXT)
+    encrypted_hex = "".join(f"{c:x}" for c in encrypted_message)
     print(encrypted_message)
+    print(f"\nencrypted msg: {encrypted_hex}")
     decrypted_message = decrypt_message(private_key, encrypted_message)
-    print(decrypted_message)
+    print(f"decrypted msg: {decrypted_message}")
+    print(f"Original text: {TEXT}")
     if (validate_rsa_process(TEXT, decrypted_message)):
         print("Decrypted message matches original")
     else:
